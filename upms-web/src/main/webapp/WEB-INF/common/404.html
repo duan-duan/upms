@@ -1,0 +1,21 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>404页面不存在</title>
+</head>
+<body>
+	<div style="margin-left: 700px;margin-top: 400px">
+		
+		<div>温馨提示:你所找的页面不存在，<span id="totalSecond">5</span>秒后自动转跳到登录页。<a href="/upms-web/mng/login.htm" style='text-decoration:none'>登陆页面</a></div>
+		<script language="javascript" type="text/javascript">
+			var second = totalSecond.innerText;
+			setInterval("redirect()", 1000);
+			function redirect() {
+				totalSecond.innerText = --second;
+				if (second < 0)
+					location.href = '/upms-web/mng/login.htm';
+			}
+		</script>
+	</div>
+</body>
+</html>
