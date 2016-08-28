@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+[#include "../include/taglibs.html"/]
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>${sysname!}欢迎页面</title>
+[#include "../include/base_js_css.html"/]
+</head>
+<body style="visibility: visible;">
+	<div id="win" class="easyui-panel" fit="true" title="系统信息">
+		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+			<tr>
+				<td width="30%" height="30" align="right">已用内存：</td>
+				<td height="30"><span style="color: #0078ff;">${(usedMemory/1024/1024)?string("0.##")}MB</span>
+				</td>
+			</tr>
+			<tr>
+				<td width="30%" height="30" align="right">剩余内存：</td>
+				<td height="30"><span style="color: #ff8400;">${(useableMemory/1024/1024)?string("0.##")}MB</span>
+				</td>
+			</tr>
+			<tr>
+				<td width="30%" height="30" align="right">最大内存：</td>
+				<td height="30"><span style="color: #00ac41;">${(maxMemory/1024/1024)?string("0.##")}MB</span>
+				</td>
+			</tr>
+			<tr>
+				<td width="30%" height="30" align="right">操作系统版本：</td>
+				<td height="30"><span class="black">${props['os.name']!}
+						${props['os.version']!}</span></td>
+			</tr>
+			<tr>
+				<td width="30%" height="30" align="right">操作系统类型：</td>
+				<td height="30"><span class="black">${props['os.arch']!}
+						${props['sun.arch.data.model']!}位</span></td>
+			</tr>
+			<tr>
+				<td width="30%" height="30" align="right">用户：</td>
+				<td height="30"><span class="black">${props['user.name']!}</span>
+				</td>
+			</tr>
+			<tr>
+				<td width="30%" height="30" align="right">目录：</td>
+				<td height="30"><span class="black">
+						${props['user.dir']!}</span></td>
+			</tr>
+			<tr>
+				<td width="30%" height="30" align="right">临时目录：</td>
+				<td height="30"><span class="black">${props['java.io.tmpdir']!}</span>
+				</td>
+			</tr>
+			<tr>
+				<td width="30%" height="30" align="right">JAVA运行环境：</td>
+				<td height="30"><span>${props['java.runtime.name']!}</span></td>
+			</tr>
+			<tr>
+				<td width="30%" height="30" align="right">JAVA虚拟机：</td>
+				<td height="30"><span>${props['java.vm.name']!}
+						${props['java.vm.version']!} </span></td>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>

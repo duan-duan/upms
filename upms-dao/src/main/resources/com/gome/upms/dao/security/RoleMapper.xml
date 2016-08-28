@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.upms.dao.security.RoleMapper">
+
+	<resultMap id="roleResultMap" type="securityRole">
+		<id property="id" column="SR_ID" />
+		<result property="name" column="SR_NAME" />
+		<result property="description" column="SR_DESCRIPTION" />
+		<result property="insertBy" column="INSERT_BY" />
+		<result property="insertDate" column="INSERT_DATE" />
+		<result property="modifiedBy" column="MODIFIED_BY" />
+		<result property="modifiedDate" column="MODIFIED_DATE" />
+		<result property="buid" column="BUID" />
+		<result property="sysId" column="SYS_ID" />
+		<result property="sysName" column="SYS_NAME" />
+	</resultMap>
+	
+		<!-- 创建实体 -->
+	<insert id="createEntity" parameterType="securityRole">
+		<include refid="insertEntityHeadSql" />
+		(#{name},#{description},#{insertBy},#{insertDate},#{modifiedBy},#{modifiedDate},#{buid},#{sysId})
+	</insert>
+
+
+	<!-- 更新实体 -->
+	<update id="updateEntity" parameterType="securityRole">
+		update SECURITY_ROLE
+		<set>
+			<if test="name!=null">SR_NAME=#{name},</if>
+			<if test="description!=null">SR_DESCRIPTION=#{description},</if>
+			<if test="modifiedBy!=null">MODIFIED_BY=#{modifiedBy},</if>
+			<if test="modifiedDate!=null">MODIFIED_DATE=#{modifiedDate},</if>
+			<if test="buid!=null">BUID=#{buid},</if>
+			<if test="sysId != null">SYS_ID=#{sysId}</if>
+		</set>
+		where SR_ID=#{id}
+	</update>
+
+
+	<!-- 根据实体查询列表 -->
+	<select id="queryListByEntity" parameterType="securityRole" resultMap="roleResultMap">
+		<include refid="queryEntityHeadSql" />
+		<include refid="queryEntityCriteriaSql" />
+	</select>
+	
+	<!-- 根据ID删除实体 -->
+	<delete id="deleteById" parameterType="long">
+		DELETE FROM SECURITY_ROLE
+		where SR_ID=#{id}
+	</delete>
+
+
+	<!-- 根据ID查出实体 -->
+	<select id="queryById" parameterType="long" resultMap="roleResultMap">
+		SELECT 
+		SR.SR_ID,SR.SR_NAME,SR.SR_DESCRIPTION,SR.INSERT_BY,SR.INSERT_DATE,SR.MODIFIED_BY,SR.MODIFIED_DATE,SR.BUID,SR.SYS_ID,SM.NAME AS SYS_NAME
+		FROM SECURITY_ROLE SR 
+		LEFT JOIN SYSTEM_MODEL SM ON SM.ID = SR.SYS_ID
+		where SR.SR_ID=#{id}
+	</select>
+
+	<!-- 分页查询 -->
+	<select id="pageQueryEntity" parameterType="securityUser"
+		resultMap="roleResultMap">
+		<include refid="queryEntityHeadSql" />
+		<include refid="queryEntityCriteriaSql" />
+		<include refid="Common.mysqlPageineSql" />
+	</select>
+
+	<!-- 统计结果 -->
+	<select id="pageQueryEntityCount" parameterType="securityRole"
+		resultType="long">
+		select count(1) as num
+		<include refid="queryEntityCriteriaSql" />
+	</select>
+
+	<!-- 创建实体头部 -->
+	<sql id="insertEntityHeadSql">
+		 INSERT INTO SECURITY_ROLE(
+	      SR_NAME,SR_DESCRIPTION,INSERT_BY,INSERT_DATE,MODIFIED_BY,MODIFIED_DATE,BUID,SYS_ID
+	     )VALUES
+	</sql>
+
+
+	<!-- 查询实体头部 -->
+	<sql id="queryEntityHeadSql">
+		SELECT 
+		SR.SR_ID,SR.SR_NAME,SR.SR_DESCRIPTION,SR.INSERT_BY,SR.INSERT_DATE,SR.MODIFIED_BY,SR.MODIFIED_DATE,SR.BUID,SR.SYS_ID,SM.NAME AS SYS_NAME 
+	</sql>
+
+
+	<!-- 查询实体条件 -->
+	<sql id="queryEntityCriteriaSql">
+		FROM SECURITY_ROLE SR
+		LEFT JOIN SYSTEM_MODEL SM ON SM.ID = SR.SYS_ID
+		<where>
+			<if test="id!=null and id!=''">
+				and SR.SR_ID= #{id}
+			</if>
+			<if test="name!=null and name!=''">
+				and SR.SR_NAME= #{name}
+			</if>
+			<if test="sysId != null ">
+				and SR.SYS_ID= #{sysId}
+			</if>
+		</where>
+	</sql>
+	
+	
+	<select id="getAllRolesByUser" resultMap="roleResultMap">
+		SELECT SR.SR_ID,SR.SR_NAME,SR.SR_DESCRIPTION,SR.INSERT_BY,SR.INSERT_DATE,SR.MODIFIED_BY,SR.MODIFIED_DATE,SR.BUID,SR.SYS_ID 
+	    FROM SECURITY_USER_ROLE UR,SECURITY_ROLE SR  WHERE UR.SR_ID=SR.SR_ID AND  UR.SU_ID = (SELECT SU_ID FROM SECURITY_USER WHERE SU_ACCOUNT=#{account})
+	</select>
+	
+</mapper>

@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+[#include "../include/taglibs.html"/]
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>管理员列表</title>
+    [#include "../include/base_js_css.html"/]
+    <script type="text/javascript" src="${resource!}/js/roleManage/roleManage.js"></script>
+    <style type="text/css">
+      #authorize_panel, #button_panel { width: auto !important; }
+      .layout-split-east { border-left: 5px solid #fff; }
+      .layout-panel-center, .layout-expand-east, .layout-split-east{ border-top: 1px solid #e1e1e1 !important; }
+    </style>
+  </head>
+  <body>
+  
+    <div class="top_content">
+       <div class="easyui-panel" style="border-bottom: 0; height: 80px;" data-options="iconCls:'icon-search',collapsible:true,border: false" fit="true">
+          <form id="search_form">
+	        <table>
+	          <tr>
+	            <td class="search_form_tdlf"><label for="id">所属系统:</label></td>
+                <td class="search_form_tdr"><input id="sysId1" class="easyui-combobox" name="sysId"></td>
+                <td class="search_form_tdl"><label for="name">角色名:</label></td>
+                <td class="search_form_tdr"><input id="name" name="name" type="text"/></td>
+	          </tr>
+	          <tr>
+	            <td class="search_form_tdlf">&nbsp;</td>
+	            <td class="search_form_tdr">
+	              <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" id="search_form_submit">查询</a>
+	              <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reset" id="search_form_reset">重置</a>
+	            </td>
+	          </tr>
+	        </table>
+	      </form>
+      </div>
+    </div>
+    
+    <div id="test_layout" class="easyui-layout"  style="height:486px;">  
+      <div id="layout_title" data-options="region:'center'" style="height:486px;">
+        <table id="roleview" fit="true"></table>
+      </div> 
+      
+      
+      <div id="permission_layout" data-options="region:'east',split:true,collapsed:true" title="权限分配" style="width:550px;height:486px; padding: 5px;">
+        <div id="test_layout2" class="easyui-layout " style="width:100%;" fit="true">
+          <div data-options="region:'center'" title="菜单授权" style="width:350px;">
+            <div class="toolbar" align="right">
+              <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="javascript:makeRolePermission()">保存</a>
+            </div>
+            <div>
+                <input type="hidden" name="hiddenSrId" id="hiddenSrId" >
+                <input type="hidden" name="hiddenSysId" id="hiddenSysId" >
+            </div>
+            <!-- 授权模块 start -->
+            <div id="authorize_panel" closed="true" class="easyui-panel" style="border-color: #fff; width: auto;" fit="true">
+              <div style="width: 250px; float: left;"><ul id="resourceTree" class="easyui-tree" checkbox="true"></ul></div> 
+              <div id="main" style="margin-left: 40px; border: 2px solid #ccc; position: relative; height:300px;display:none;"> <input type="hidden" name="hiddenParentId" id="hiddenParentId" ></div>
+            </div>
+            <!-- 授权模块  end-->
+          </div>
+          <div data-options="region:'east',split:true,collapsed:true" title="操作按钮授权" style="width:200px;">
+            <div id="toolbar_Div" class="toolbar" align="right">
+              <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="javascript:makeButtonPermission()">保存</a>
+            </div>
+            <div id="button_panel" closed="true" class="easyui-panel" style="border-color: #fff;" fit="true">
+              <table id="buttonview">
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+     </div>
+	
+	<!-- 添加模块 -->
+	<div id="role_dlg" class="easyui-dialog"
+		style="width: 400px; height: 350px; padding: 10px 20px" closed="true"
+		buttons="#role_dlg-buttons">
+		<div class="ftitle">编辑角色信息</div>
+		<form id="role_fm" method="post" novalidate>
+			<div class="fitem">
+				<label>角色名称:</label> <input name="name" id="name"
+					class="easyui-validatebox" required="true" type="text" validType="length[1,50]"> <input name="id" type="hidden" />
+			</div>
+			<div class="fitem">
+				<label> 角色描述:</label> 
+				<textarea rows="5" cols="18" name="description" id="description" required="true" class="easyui-validatebox" validType="length[1,100]"></textarea>
+			</div>
+			<div class="fitem">
+				<label>所属系统:</label>
+				<input id="sysId" class="easyui-combobox" name="sysId" required="true">
+			</div>
+		</form>
+	</div>
+	<div id="role_dlg-buttons">
+		<a href="javascript:void(0)" class="easyui-linkbutton"
+			iconCls="icon-ok" onclick="javascript:saveRole()">保存</a> <a
+			href="javascript:void(0)" class="easyui-linkbutton"
+			iconCls="icon-cancel" onclick="javascript:$('#role_dlg').dialog('close')">取消</a>
+	</div>
+	
+</body>
+</html>

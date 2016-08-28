@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.upms.dao.security.ResourceMapper">
+
+	<resultMap id="resourceResultMap" type="securityResource">
+		<id property="sp_id" column="SP_ID" />
+		<id property="sp_name" column="SP_NAME" />
+		<id property="sp_parent_id" column="SP_PARENT_ID" />
+		<id property="sys_id" column="SYS_ID" />
+		<id property="sp_desc" column="SP_DESC" />
+		<id property="href" column="HREF" />
+		<id property="target" column="TARGET" />
+		<id property="sp_visible" column="SP_VISIBLE" />
+		<id property="sp_type" column="SP_TYPE" />
+		<id property="icon" column="ICON" />
+		<id property="version" column="VERSION" />
+		<id property="permission" column="PERMISSION" />
+		<id property="rank" column="RANK" />
+	</resultMap>
+	
+	<resultMap id="childResourceResultMap" type="securityResource">
+		<id property="sp_name" column="SP_NAME" />
+		<id property="href" column="HREF" />
+		<id property="permission" column="PERMISSION" />
+	</resultMap>
+
+	<select id="getRootList" resultMap="resourceResultMap">
+        SELECT SP.SP_PARENT_ID,SP.SP_ID,SP.SYS_ID,SP.SP_NAME,SP.SP_DESC,SP.HREF,SP.TARGET,SP.SP_VISIBLE,SP.PERMISSION,SP.VERSION,SP.SP_TYPE,SP.ICON,SP.RANK
+        FROM SECURITY_PERMISSION SP 
+        WHERE SP.SP_PARENT_ID NOT IN (SELECT SP_ID FROM SECURITY_PERMISSION)  AND SP.SP_TYPE != 'button' AND SP.SYS_ID=1
+        ORDER BY SP.RANK
+	</select>
+	
+	<select id="getSelectedList" parameterType="String" resultMap="resourceResultMap">
+        SELECT SP.SP_PARENT_ID,SP.SP_ID,SP.SYS_ID,SP.SP_NAME,SP.SP_DESC,SP.HREF,SP.TARGET,SP.SP_VISIBLE,SP.PERMISSION,SP.VERSION,SP.SP_TYPE,SP.ICON,SP.RANK
+        FROM SECURITY_PERMISSION SP 
+        WHERE SP.SP_ID IN( SELECT SP_ID FROM SECURITY_ROLE_PERMISSION WHERE SR_ID IN(SELECT ur.SR_ID FROM SECURITY_USER_ROLE ur,SECURITY_USER u WHERE ur.SU_ID=u.SU_ID AND u.SU_ACCOUNT=#{account}))
+        ORDER BY SP.RANK
+    </select>
+	
+	
+	<select id="getSystemRootList" resultMap="resourceResultMap">
+        SELECT SP.SP_PARENT_ID,SP.SP_ID,SP.SYS_ID,SP.SP_NAME,SP.SP_DESC,SP.HREF,SP.TARGET,SP.SP_VISIBLE,SP.PERMISSION,SP.VERSION,SP.SP_TYPE,SP.ICON,SP.RANK
+        FROM SECURITY_PERMISSION SP 
+        WHERE SP.SP_PARENT_ID NOT IN (SELECT SP_ID FROM SECURITY_PERMISSION) AND SP.SYS_ID = #{SYS_ID} AND SP.SP_TYPE != 'button'
+        ORDER BY SP.RANK
+	</select>
+	
+	<select id="getChildNodeList" resultMap="resourceResultMap">
+		SELECT SP.SP_PARENT_ID,SP.SP_ID,SP.SYS_ID,SP.SP_NAME,SP.SP_DESC,SP.HREF,SP.TARGET,SP.SP_VISIBLE,SP.PERMISSION,SP.VERSION,SP.SP_TYPE,SP.ICON,SP.RANK
+        FROM SECURITY_PERMISSION SP 
+        WHERE SP_PARENT_ID = #{PID} AND SP.SP_TYPE != 'button'  AND SP.SP_VISIBLE='Y'
+        ORDER BY SP.RANK 
+	</select>
+	
+	<select id="getChildButtonNodeList" resultMap="resourceResultMap">
+		SELECT SP.SP_PARENT_ID,SP.SP_ID,SP.SYS_ID,SP.SP_NAME,SP.SP_DESC,SP.HREF,SP.TARGET,SP.SP_VISIBLE,SP.PERMISSION,SP.VERSION,SP.SP_TYPE,SP.ICON,SP.RANK
+        FROM SECURITY_PERMISSION SP 
+        WHERE SP_PARENT_ID = #{PID}  AND SP.SP_VISIBLE='Y'
+        ORDER BY SP.RANK 
+	</select>
+	
+	<select id="getSystemResourceList" resultMap="resourceResultMap">
+		SELECT SP.SP_PARENT_ID,SP.SP_ID,SP.SYS_ID,SP.SP_NAME,SP.SP_DESC,SP.HREF,SP.TARGET,SP.SP_VISIBLE,SP.PERMISSION,SP.VERSION,SP.SP_TYPE,SP.ICON,SP.RANK
+        FROM SECURITY_PERMISSION SP 
+        WHERE SYS_ID = #{SYS_ID} AND SP.SP_TYPE != 'button'   AND SP.SP_VISIBLE='Y'
+        ORDER BY SP.RANK 
+	</select>
+	
+	<select id="getSystemResourceChildList" resultMap="resourceResultMap">
+		SELECT SP.SP_PARENT_ID,SP.SP_ID,SP.SYS_ID,SP.SP_NAME,SP.SP_DESC,SP.HREF,SP.TARGET,SP.SP_VISIBLE,SP.PERMISSION,SP.VERSION,SP.SP_TYPE,SP.ICON,SP.RANK
+        FROM SECURITY_PERMISSION SP 
+        WHERE SYS_ID = #{SYS_ID} AND SP_PARENT_ID = #{PID} AND SP.SP_TYPE != 'button'   AND SP.SP_VISIBLE='Y'
+        ORDER BY SP.RANK 
+	</select>
+	
+	<select id="getButtonListForMenu" resultMap="childResourceResultMap">
+		SELECT SP.SP_NAME,SP.HREF,SP.PERMISSION,SP.SP_ID
+        FROM SECURITY_PERMISSION SP 
+        WHERE SP.SP_TYPE = 'button' AND SP.SP_PARENT_ID=#{PID}  AND SP.SP_VISIBLE='Y'
+	</select>
+	
+	<select id="getNode" resultMap="resourceResultMap">
+		SELECT SP.SP_PARENT_ID,SP.SP_ID,SP.SYS_ID,SP.SP_NAME,SP.SP_DESC,SP.HREF,SP.TARGET,SP.SP_VISIBLE,SP.PERMISSION,SP.VERSION,SP.SP_TYPE,SP.ICON,SP.RANK
+        FROM SECURITY_PERMISSION SP
+        WHERE SP.SP_ID = #{ID} AND SP.SP_TYPE != 'button' AND SP.SP_VISIBLE='Y'
+        ORDER BY SP.RANK 
+	</select>
+	
+	<select id="getNodeById" resultMap="resourceResultMap">
+		SELECT SP.SP_PARENT_ID,SP.SP_ID,SP.SYS_ID,SP.SP_NAME,SP.SP_DESC,SP.HREF,SP.TARGET,SP.SP_VISIBLE,SP.PERMISSION,SP.VERSION,SP.SP_TYPE,SP.ICON,SP.RANK
+        FROM SECURITY_PERMISSION SP
+        WHERE SP.SP_ID = #{ID} AND SP.SP_VISIBLE='Y'
+	</select>
+	
+	<delete id="deleteNode" parameterType="int">
+	    DELETE FROM SECURITY_PERMISSION 
+	    WHERE SP_ID= #{ID}
+	</delete>
+	
+	<delete id="deleteCascade" parameterType="int">
+	    DELETE FROM SECURITY_PERMISSION 
+	    WHERE SP_PARENT_ID= #{ID}
+	</delete>
+	
+	<insert id="addNode" parameterType="com.upms.entity.security.Resource">
+	  INSERT INTO SECURITY_PERMISSION (
+	      SP_PARENT_ID,SYS_ID,SP_NAME,SP_DESC,HREF,TARGET,SP_VISIBLE,PERMISSION,ICON,SP_TYPE,VERSION,RANK
+	  )VALUES(
+	      #{resource.sp_parent_id},#{resource.sys_id},#{resource.sp_name},#{resource.sp_desc},#{resource.href},#{resource.target},'Y',#{resource.permission},#{resource.icon},#{resource.sp_type},'2',#{resource.rank}
+	  ) 
+	</insert>
+	
+	<update id="updateNode" parameterType="com.upms.entity.security.Resource">
+	     UPDATE SECURITY_PERMISSION 
+	     SET
+	       SP_PARENT_ID=#{resource.sp_parent_id},
+	       SYS_ID = #{resource.sys_id},
+	       SP_NAME=#{resource.sp_name},
+	       SP_DESC=#{resource.sp_desc},
+	       HREF=#{resource.href},
+	       TARGET=#{resource.target},
+	       SP_VISIBLE=#{resource.sp_visible},
+	       PERMISSION=#{resource.permission},
+	       ICON=#{resource.icon},
+	       SP_TYPE=#{resource.sp_type},
+	       RANK=#{resource.rank},
+	       VERSION='2'
+	     WHERE SP_ID=#{resource.sp_id} AND SP_VISIBLE='Y'
+	</update>
+	
+		<!-- 根据实体查询列表 -->
+	<select id="queryListByEntity" parameterType="securityResource" resultMap="resourceResultMap">
+		<include refid="queryEntityHeadSql" />
+		<include refid="queryEntityCriteriaSql" />
+	</select>
+	
+	
+	<!-- 查询实体头部 -->
+	<sql id="queryEntityHeadSql">
+		SELECT SP.SP_PARENT_ID,SP.SP_ID,SP.SYS_ID,SP.SP_NAME,SP.SP_DESC,SP.HREF,SP.TARGET,SP.SP_VISIBLE,SP.PERMISSION,SP.VERSION,SP.SP_TYPE,SP.ICON,SP.RANK
+	</sql>
+
+
+	<!-- 查询实体条件 -->
+	<sql id="queryEntityCriteriaSql">
+		FROM SECURITY_PERMISSION SP
+		<where>
+			<if test="null!=sp_id">
+			  	 AND SP.SP_ID=#{sp_id} 
+			</if>
+			<if test="null!=sp_name">
+			  	 AND SP.SP_NAME=#{sp_name} 
+			</if>
+			<if test="null!=sp_parent_id">
+			  	 AND SP.SP_PARENT_ID=#{sp_parent_id} 
+			</if>
+			<if test="null!=sys_id">
+			  	 AND SP.SYS_ID=#{sys_id} 
+			</if>
+			    AND SP.SP_VISIBLE='Y'
+		</where>
+	</sql>
+	
+	<!-- 查询授权菜单列表 -->
+	<select id="getAuthorizedList" parameterType="map" resultMap="resourceResultMap">
+        SELECT distinct SP.SP_PARENT_ID,SP.SP_ID,SP.SYS_ID,SP.SP_NAME,SP.SP_DESC,SP.HREF,SP.TARGET,SP.SP_VISIBLE,SP.PERMISSION,SP.VERSION,SP.SP_TYPE,SP.ICON,SP.RANK
+        FROM SECURITY_PERMISSION SP
+		LEFT JOIN SECURITY_ROLE_PERMISSION SRP on SP.SP_ID = SRP.SP_ID
+		LEFT JOIN SECURITY_USER_ROLE SUR ON SRP.SR_ID = SUR.SR_ID
+		LEFT JOIN SECURITY_USER SU on SUR.SU_ID = SU.SU_ID
+        WHERE   SP.SP_TYPE     !=  'button'
+        <if test="account != null">
+        		 AND   SU.SU_ACCOUNT  =   #{account}
+        </if>
+        <if test="sysId != null">
+        		AND   SP.SYS_ID      =   #{sysId}
+        </if>
+        <if test="roleId != null">
+        		AND   SRP.SR_ID     =   #{roleId}
+        </if>
+               AND SP.SP_VISIBLE='Y'
+        ORDER BY SP.RANK
+    </select>
+    
+    <!-- 查询所有菜单列表 -->
+	<select id="getAllMenuList" parameterType="map" resultMap="resourceResultMap">
+        SELECT SP.SP_PARENT_ID,SP.SP_ID,SP.SYS_ID,SP.SP_NAME,SP.SP_DESC,SP.HREF,SP.TARGET,SP.SP_VISIBLE,SP.PERMISSION,SP.VERSION,SP.SP_TYPE,SP.ICON,SP.RANK
+        FROM SECURITY_PERMISSION SP 
+        WHERE SP.SP_TYPE     !=  'button'
+        <if test="sysId != null">
+        	AND SP.SYS_ID = #{sysId}
+        </if>
+           AND SP.SP_VISIBLE='Y'
+        ORDER BY SP.RANK
+    </select>
+</mapper>

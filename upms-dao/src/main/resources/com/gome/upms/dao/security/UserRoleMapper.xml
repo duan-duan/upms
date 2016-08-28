@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.upms.dao.security.UserRoleMapper">
+
+  <resultMap id="roleResultForUserRoleMap" type="securityRole">
+    <id property="id" column="sr_id" />
+    <id property="name" column="sr_name" />
+    <id property="suId" column="su_id" />
+    <id property="spId" column="sp_id" />
+    <id property="description" column="sr_description" />
+  </resultMap>
+  
+  
+  <select id="getRolesByUserId" resultMap="roleResultForUserRoleMap">
+    select * from security_role r where r.sr_id in (select ur.sr_id from security_user_role ur where ur.su_id= #{userId} )
+  </select>
+  
+  <select id="getRolesByNotUserId" resultMap="roleResultForUserRoleMap">
+    select * from security_role r where r.sr_id not in (select ur.sr_id from security_user_role ur where ur.su_id=#{userId})
+  </select>
+  
+  <delete  id="deleteRoleByUser">
+    delete from security_user_role where su_id=#{userId}
+  </delete >
+  
+  <insert  id="insertRolesForUser">
+    insert into security_user_role(su_id,sr_id) values
+      <foreach collection="roleIds" item="item" index="index" separator=",">
+        (#{userId},#{item})
+      </foreach>
+  </insert>
+
+  <select id="queryMasLocList" resultType="java.util.Map">
+  	SELECT DISTINCT T.MAS_LOC,CONCAT(T.MAS_LOC , '_', T.DESCR) DESCR FROM MST_MAS_LOC T WHERE T.ENABLED=1
+  </select>
+
+  <select id="queryLsPList" resultType="java.util.Map">
+    SELECT DISTINCT LSP_CODE,CONCAT(LSP_CODE,'_',LSP_NAME) DESCR FROM MST_LSP
+  </select>
+</mapper>

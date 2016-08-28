@@ -1,0 +1,225 @@
+<!DOCTYPE HTML>
+[#include "../include/taglibs.html"/]
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>管理员列表</title>
+    [#include "../include/base_js_css.html"/]
+    <link rel="stylesheet" type="text/css" href="${resource!}/css/user/user.css">
+    <script type="text/javascript" src="${resource!}/js/user/user.js"></script>
+  </head>
+  <body style="overflow: auto;">
+    <div class="top_content">
+      <!-- 查询用户表单 -->
+      <div class="easyui-panel" style="border-bottom: 0; height: 80px;" data-options="iconCls:'icon-search',collapsible:true,border: false" fit="true">
+        <form id="user_search_form">
+        <table>
+          <tr>
+            <td class="search_form_tdlf"><label for="account">账户</label></td>
+            <td class="search_form_tdr"><input name="account" id="account" type="text"/></td>
+            <td class="search_form_tdl"><label for="name">用户名</label></td>
+            <td class="search_form_tdr"><input name="name" id="name" type="text"/></td>
+            <td class="search_form_tdl"><label for="masLoc">仓库</label></td>
+            <td class="search_form_tdr"><input name="masLoc" id="masLoc" type="text"/></td>
+            <td class="search_form_tdl"><label for="id">是否有效:</label></td>
+            <td class="search_form_tdr"><input name="enabled" class="easyui-combobox" id="enabled" type="text" editable="false"
+            data-options="panelHeight:'auto',valueField:'enabled',textField:'enabledView', data:[{enabled:1,enabledView:'是',selected:true},{enabled:0,enabledView:'否'}]" /></td>
+          </tr>
+          <tr>
+            <td class="search_form_tdlf">&nbsp;</td>
+            <td colspan="5"  class="search_form_tdr">
+              <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" id="search_form_submit">查询</a>
+              <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reset" id="search_form_reset">重置</a>
+              <!-- <a href="javascript:void(0);" id="test1">测试警告</a>
+              <a href="javascript:void(0);" id="test2">测试错误</a>
+              <a href="javascript:void(0);" id="test3">测试提示</a>
+              <a href="javascript:void(0);" id="test4">测试警告</a> -->
+            </td>
+          </tr>
+        </table>
+        </form>
+      </div>
+    </div>
+
+    <div id="user_grid" class="grid_content">
+      <!-- 用户信息列表GRID -->
+      <table id="userview" fit="true" style="width: 100%;">
+      </table>
+    </div>
+
+    <!-- 添加用户模块 begin -->
+    <div id="user_add_dialog" class="easyui-dialog" style="width: 550px; height: 480px; padding: 10px 20px" closed="true">
+      <div class="ftitle">用户信息</div>
+      <form id="user_add_form" method="post" novalidate class="ftitle_form">
+        <div class="fitem fitem_odd">
+          <label for="account">账户:</label> 
+          <input name="account" id="account" type="text" class="easyui-validatebox"  required="true"  validType="remote['${ctx!}/user/unique.json','account']" invalidMessage="该账户已经存在"> 
+        </div>
+        <div class="fitem fitem_even">
+          <label for="name">用户名:</label> 
+          <input name="name" id="name" type="text" class="easyui-validatebox" required="true"> 
+        </div>
+        <div class="fitem fitem_odd">
+          <label for="password">密 码:</label> 
+          <input name="password" required="true" id="password" type="password" class="easyui-validatebox"
+            validType="minLength[6]">
+        </div>
+        <div class="fitem fitem_even">
+          <label for="repassword">确认密码:</label> 
+          <input name="repassword" required="true" id="repassword" type="password" class="easyui-validatebox" 
+            validType="equalTo['#user_add_form #password']" invalidMessage="两次输入密码不匹配!">
+        </div>
+        <div class="fitem fitem_odd">
+          <label for="email">E-mail:</label>
+          <input name="email" type="text" required="true" class="easyui-validatebox" validType="email" />
+        </div>
+        <div class="fitem fitem_even">
+          <label for="active">是否可登陆</label>
+          <input name="active" type="text" id="active" class="easyui-combobox" required="true" editable="false"
+          data-options="panelHeight:'auto',valueField:'active',textField:'activeView', data:[{active:'Y',activeView:'是',selected:true},{active:'N',activeView:'否'}]" />
+        </div>
+        <div class="fitem fitem_even">
+          <label for="masLoc">仓库</label>
+          <input name="masLocs" type="text" style="width: 200px;height:50px" id="masLocs" class="easyui-combobox"
+          editable="true" data-options="panelHeight:'auto',multiple:false,valueField:'MAS_LOC',textField:'DESCR'"/>
+        </div>
+        <div class="fitem fitem_odd">
+          <label for="active">承运商编码</label>
+          <input name="lspCode" type="text" style="width: 200px;height:50px" id="lspCode" class="easyui-combobox"
+                 editable="true" data-options="panelHeight:'auto',multiple:false,valueField:'LSP_CODE',textField:'DESCR'"/>
+        </div>
+      </form>
+    </div>
+    <!-- 添加用户模块 end -->
+
+    <!-- 修改用户模块 begin -->
+    <div id="user_edit_dialog" class="easyui-dialog" style="width: 550px; height: 480px; padding: 10px 20px" closed="true">
+      <div class="ftitle">用户信息</div>
+      <form id="user_edit_form" method="post" novalidate class="ftitle_form">
+      	<input name="account" type="hidden" />
+        <div class="fitem fitem_odd">
+          <label for="account">账户:</label> 
+          <input name="account" id="account" type="text" class="easyui-validatebox" disabled="disabled">
+          <input name="id" type="hidden" />
+        </div>
+        <div class="fitem fitem_even">
+          <label for="name">用户名:</label> 
+          <input name="name" id="name" type="text" class="easyui-validatebox" required="true"> 
+        </div>
+        <div class="fitem fitem_odd">
+          <label for="password">密 码:</label> 
+          <input name="password" required="true" id="password_update" type="password" class="easyui-validatebox"
+            validType="minLength[6]">
+        </div>
+        <div class="fitem fitem_even">
+          <label for="repassword">确认密码:</label> 
+          <input name="repassword" required="true" id="repassword" type="password" class="easyui-validatebox" 
+            validType="equalTo['#password_update']" invalidMessage="两次输入密码不匹配!">
+        </div>
+        <div class="fitem fitem_odd">
+          <label for="email">E-mail:</label>
+          <input name="email" type="text" required="true" class="easyui-validatebox" validType="email" />
+        </div>
+        <div class="fitem fitem_even">
+           <label for="active">是否可登陆</label>
+           <input name="active" id="active" class="easyui-combobox" editable="false" data-options="panelHeight:'auto',valueField:'active',textField:'activeView',
+			data:[{active:'Y',activeView:'是'},{active:'N',activeView:'否'}]" />
+        </div>
+        <div class="fitem fitem_even">
+          <label for="masLoc">仓库</label>
+          <input name="masLocsEdit" type="text" style="width: 200px;height:50px" id="masLocsEdit" class="easyui-combobox"
+          editable="true" data-options="panelHeight:'auto',multiple:false,valueField:'MAS_LOC',textField:'DESCR'"/>
+        </div>
+        <div class="fitem fitem_odd">
+          <label for="active">承运商编码</label>
+          <input name="lspCode" type="text" style="width: 200px;height:50px" id="lspCodeEdit" class="easyui-combobox"
+                 editable="true" data-options="panelHeight:'auto',multiple:false,valueField:'LSP_CODE',textField:'DESCR'"/>
+        </div>
+      </form>
+    </div>
+    <!-- 修改用户模块 end -->
+
+    <!-- 用户详细信息 begin -->
+    <div id="user_detail_dialog" title="用户信息" class="easyui-dialog" 
+      style="width: 800px; height: 400px; padding: 10px 20px" closed="true" buttons="#detail-dlg-buttons">
+     <div class="ftitle">用户详细信息</div>
+      <form id="user_detail_form" class="detail_form" novalidate>
+        <table style="width: 100%; border: none; border: 0;" cellpadding="0" cellspacing="0">
+          <tr class="detail_form_odd">
+            <td width="20%" class="detail_form_tdl">账户:</td>
+            <td width="30%" class="detail_form_tdr"><input name="account" id="account"  readonly="readonly"/></td>
+            <td width="20%" class="detail_form_tdl">用户名:</td>
+            <td width="30%" class="detail_form_tdr"><input name="name" id="name"  readonly="readonly"/></td>
+          </tr>
+          <tr>
+            <td class="detail_form_tdl">分机号码:</td>
+            <td class="detail_form_tdr"><input name="extension" id="extension"  readonly="readonly"/></td>
+            <td class="detail_form_tdl">E-mail:</td>
+            <td class="detail_form_tdr"><input name="email" id="email"  readonly="readonly"/></td>
+          </tr>
+          <tr class="detail_form_odd">
+             <td class="detail_form_tdl">是否有效:</td>
+             <td class="detail_form_tdr"><input name="active" id="active"  readonly="readonly"/></td>
+            <td class="detail_form_tdl">是否为管理员:</td>
+            <td class="detail_form_tdr"><input name="admin_flag" id="admin_flag"  readonly="readonly"/></td>
+          </tr>
+          <tr>
+            <td class="detail_form_tdl">角色:</td>
+            <td class="detail_form_tdr"><input name="roles" id="roles"  readonly="readonly"/></td>
+            <td class="detail_form_tdl">标题:</td>
+            <td class="detail_form_tdr"><input name="title" id="title"  readonly="readonly"/></td>
+          </tr>
+          <tr class="detail_form_odd">
+            <td class="detail_form_tdl">是否为企业员工:</td>
+            <td class="detail_form_tdr"><input name="is_employee" id="is_employee"  readonly="readonly"/></td>
+            <td class="detail_form_tdl">管理员E-mail:</td>
+            <td class="detail_form_tdr"><input name="manager_email" id="manager_email"  readonly="readonly"/></td>
+          </tr>
+          <tr>
+            <td class="detail_form_tdl">创建人:</td>
+            <td class="detail_form_tdr"><input name="insert_by" id="insert_by"  readonly="readonly"/></td>
+            <td class="detail_form_tdl">创建时间:</td>
+            <td class="detail_form_tdr"><input name="insert_date" id="insert_date"  readonly="readonly"/></td>
+          </tr>
+          <tr  class="detail_form_odd">
+            <td class="detail_form_tdl" valign="top">备注:</td>
+            <td class="detail_form_tdr" colspan="3">
+              <textarea  style="height: 80px; width: 300px;" name="remake" id="remake" readonly="readonly"></textarea>
+            </td>
+          </tr>
+         </table>
+       </form>
+     </div>
+     <!-- 用户详细信息 end -->
+     
+     <!-- 用户角色管理 begin -->
+    <div id="role_manage" title="用户角色管理" data-options=""
+      style="display: none; position: relative;">
+      <div style="padding: 5px 0 5px 30px;" id="role_user_info">用户：张三</div>
+      <div style="width: 335px; float: left; margin: 0 0 5px 10px;">
+        <div id="new_roles" class="" data-options="closable:false,tools:'#urn_tt'" 
+          title="可选角色" style="width: 335px; height: 350px; padding: 10px;">
+        </div>
+      </div>
+      <div style="width: 335px; margin-left: 390px; margin-top: 0; margin-bottom: 5px;">
+        <div id="own_roles" class="" data-options="closable:false,tools:'#uro_tt'"
+          title="已选角色" style="width: 335px; height: 350px; padding: 10px;">
+        </div>
+      </div>
+      <div style="padding-left: 30px;"><span style="color: red; vertical-align: middle;">*</span>提示：您还可以通过拖动或双击来管理用户的角色。</div>
+      <div class="role_mbtn">
+        <a title="添加角色" id="add_user_roles">&gt;</a> <br/>
+        <a title="删除角色" id="del_user_roles">&lt;</a>
+      </div>
+    </div>
+    <div id="urn_tt">
+      <a href="javascript:void(0)" class="role_sbtn" onclick="javascript:selectRoles('new',true)">全选</a>
+      <a href="javascript:void(0)" class="role_sbtn" onclick="javascript:selectRoles('new',false)">反选</a>
+    </div>
+    <div id="uro_tt">
+      <a href="javascript:void(0)" class="role_sbtn" onclick="javascript:selectRoles('own', true)">全选</a>
+      <a href="javascript:void(0)" class="role_sbtn" onclick="javascript:selectRoles('own', false)">反选</a>
+    </div>
+    <!-- 用户角色管理 end -->
+  </body>
+</html>

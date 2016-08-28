@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.upms.dao.system.OperationLogMapper">
+
+	<resultMap id="operationLogResultMap" type="securityOperationLog">
+		<id property="id" column="ID" />
+		<id property="title" column="TITLE" />
+		<id property="username" column="USERNAME" />
+		<id property="content" column="CONTENT" />
+		<id property="ip" column="IP" />
+		<id property="insertDate" column="INSERT_DATE" />
+	</resultMap>
+	
+		<!-- 创建实体 -->
+		
+	<insert id="createEntity" parameterType="securityLoginSuccessLog">
+		<include refid="insertEntityHeadSql" />
+		(#{title},#{username},#{content},#{ip},#{insertDate})
+	</insert>
+	
+		<!-- 创建实体头部 -->
+	<sql id="insertEntityHeadSql">
+	        INSERT INTO SECURITY_OPERATION_LOG (TITLE,USERNAME,CONTENT,IP,INSERT_DATE)VALUES
+	</sql>
+	
+	
+	<!-- 分页查询 -->
+	<select id="pageQueryEntity" parameterType="securityOperationLog"
+		resultMap="operationLogResultMap">
+		<include refid="queryEntityHeadSql" />
+		<include refid="queryEntityCriteriaSql" />
+		<include refid="Common.mysqlPageineSql" />
+	</select>
+	
+		<!-- 统计结果 -->
+	 <select id="pageQueryEntityCount" parameterType="securityOperationLog"
+		resultType="long">
+		select count(1) as num
+		<include refid="queryEntityCriteriaSql" />
+	</select>
+	
+	
+	<!-- 查询实体头部 -->
+	<sql id="queryEntityHeadSql">
+		SELECT OL.ID,OL.TITLE,OL.USERNAME,OL.CONTENT,OL.IP,OL.INSERT_DATE
+	</sql>
+
+
+	<!-- 查询实体条件 -->
+	<sql id="queryEntityCriteriaSql">
+		FROM SECURITY_OPERATION_LOG OL
+		<where>
+			<if test="null!=title and title!=''">
+			  	 AND OL.TITLE=#{title} 
+			</if>
+			<if test="null!=username and username!=''">
+			  	 AND OL.USERNAME =#{username} 
+			</if>
+			<if test="null!=ip and ip!=''">
+			  	 AND OL.IP =#{ip} 
+			</if>
+			<if test="null!=insertUpDate">
+			  	 AND OL.INSERT_DATE &lt;= #{insertUpDate} 
+			</if>
+			<if test="null!=insertDownDate">
+			  	 AND OL.INSERT_DATE &gt;= #{insertDownDate} 
+			</if>
+		</where>
+	</sql>
+
+</mapper>

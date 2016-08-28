@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+[#include "../include/taglibs.html"/]
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>登录成功列表</title> [#include "../include/base_js_css.html"/]
+    <script type="text/javascript" src="${resource!}/js/loginLog/loginSuccessLog.js"></script>
+  </head>
+  <body style="visibility: visible;">
+    <div class="top_content">
+      <div class="easyui-panel" style="border-bottom: 0; height: 105px;" data-options="iconCls:'icon-search',collapsible:true,border: false" fit="true">
+        <form id="fm_search" method="post" novalidate>
+           <table>
+           <tr>
+             <td class="search_form_tdlf"><label for="username">用户名</label></td>
+             <td class="search_form_tdr"><input name="username" id="username" type="text"/></td>
+             <td class="search_form_tdl"><label for="ip">IP</label></td>
+             <td class="search_form_tdr"><input name="ip" id="ip" type="text"/></td>
+           </tr>
+           <tr>
+             <td class="search_form_tdlf"><label for="insertDownDate">操作日期</label></td>
+             <td class="search_form_tdr" colspan="3">
+               <label for="insertDownDate"></label><input id="insertDownDate" name="insertDownDate" class="easyui-datebox" >
+               <label for="insertUpDate">至</label><input id="insertUpDate" name="insertUpDate" class="easyui-datebox" >
+             </td>
+           </tr>
+           <tr>
+             <td class="search_form_tdlf">&nbsp;</td>
+             <td class="search_form_tdr" colspan="3" style="padding-left: 10px;">
+               <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="javascript:submitQuerySuccessLoginLog();">查询</a>
+               <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reset" onclick="$('#fm_search').form('reset'); ">重置</a>
+             </td>
+           </tr>
+         </table>
+        </form>
+      </div>  
+    </div>
+    <div id="loginSuccess_grid" class="grid_content">
+       <table id="loginSuccessLogview" fit="true">
+       </table>
+    </div>
+  </body>
+</html>

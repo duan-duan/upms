@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+	<settings>
+		<!-- changes from the defaults -->
+		<setting name="lazyLoadingEnabled" value="false" />
+		<setting name="cacheEnabled" value="false"/>
+		<setting name="callSettersOnNulls" value="true" />  		 
+	</settings>
+
+	<typeAliases>
+		<typeAlias alias="securityUser" type="com.upms.entity.security.User" />
+		<typeAlias alias="securityRole" type="com.upms.entity.security.Role" />
+		<typeAlias alias="securityUserRole" type="com.upms.entity.security.UserRole" />
+		<typeAlias alias="securityRolePermission" type="com.upms.entity.security.RolePermission" />
+		<typeAlias alias="securityPermission" type="com.upms.entity.security.Permission" />
+		<typeAlias alias="securitySystemModel" type="com.upms.entity.security.SystemModel" />
+		<typeAlias alias="securityResource" type="com.upms.entity.security.Resource" />
+		<typeAlias alias="securityOperationLog" type="com.upms.entity.system.OperationLog" />
+		<typeAlias alias="securityLoginSuccessLog" type="com.upms.entity.system.LoginSuccessLog" />
+		<typeAlias alias="securityLoginFailLog" type="com.upms.entity.system.LoginFailLog" />
+		<typeAlias alias="securityDepartment" type="com.upms.entity.security.Department" />
+	</typeAliases>
+
+
+	<mappers>
+		<mapper resource="com/gome/upms/dao/common/common.xml"/>
+	</mappers>
+	
+</configuration>

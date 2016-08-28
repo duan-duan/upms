@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+ 
+    <!-- 提供方应用信息，用于计算依赖关系 -->
+    <dubbo:application name="upmsService"  />
+ 
+    <!-- 使用multicast广播注册中心暴露服务地址 -->
+     
+    
+	<dubbo:registry address="${registry.address}" />
+
+	<!--  
+	<dubbo:registry address="redis://10.57.40.178:6379" />
+	-->
+	 
+    <!-- 用dubbo协议在20881端口暴露服务 -->
+    <dubbo:protocol name="dubbo" port="${dubbo-port}" />
+    
+    <!-- 安全dubbo -->
+	<import resource="security-services.xml" />
+	
+	<!-- 系统dubbo -->
+	<import resource="system-services.xml" />
+
+</beans>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.upms.dao.security.PermissionMapper">
+
+	<resultMap id="permissionResultMap" type="securityPermission">
+		<id property="spId" column="SP_ID" />
+		<id property="spName" column="SP_NAME" />
+		<id property="sysId" column="SYS_ID"/>
+		<id property="spParentId" column="SP_PARENT_ID"/>
+		<id property="spDesc" column="SP_DESC" />
+		<id property="href" column="HREF" />
+		<id property="target" column="TARGET" />
+		<id property="icon" column="ICON" />
+		<id property="spVisible" column="SP_VISIBLE" />
+		<id property="spType" column="SP_TYPE" />
+		<id property="permission" column="PERMISSION" />
+		<id property="version" column="VERSION" />
+	</resultMap>
+	
+	<select id="queryListByEntity" parameterType="securityPermission" resultMap="permissionResultMap">
+		<include refid="queryEntityHeadSql" />
+		<include refid="queryEntityCriteriaSql" />
+	</select>
+	
+		<!-- 根据ID查出实体 -->
+	<select id="queryById" parameterType="long" resultMap="permissionResultMap">
+		SELECT 
+		SP_ID,SP_NAME,SP_PARENT_ID,SP_DESC,HREF,TARGET,ICON,SP_VISIBLE,SP_TYPE,PERMISSION,VERSION,SYS_ID 
+		FROM SECURITY_PERMISSION where SP_ID= #{spId} AND SP_VISIBLE='Y'
+	</select>
+	
+	<!-- 查询实体头部 -->
+	<sql id="queryEntityHeadSql">
+		SELECT 
+		SP_ID,SP_NAME,SP_PARENT_ID,SP_DESC,HREF,TARGET,ICON,SP_VISIBLE,SP_TYPE,PERMISSION,VERSION,SYS_ID 
+	</sql>
+
+
+	<!-- 查询实体条件 -->
+	<sql id="queryEntityCriteriaSql">
+		FROM SECURITY_PERMISSION
+		<where>
+			<if test="spId!=null and spId!=''">
+				and SP_ID= #{spId}
+			</if>
+			<if test="spParentId!=null and spParentId!=''">
+				and SP_PARENT_ID= #{spParentId}
+			</if>
+			<if test="spName!=null and spName!=''">
+				and SP_NAME= #{spName}
+			</if>
+			<if test="sysId!=null and sysId!=''">
+				and SYS_ID= #{sysId}
+			</if>
+			   AND SP_VISIBLE='Y'
+		</where>
+	</sql>
+	
+	<!-- 树形查询子节点按钮使用 -->
+	<select id="getPermissionButtonListByParentId" resultMap="permissionResultMap">
+		SELECT 
+		SP_ID,SP_NAME,SP_PARENT_ID,SP_DESC,HREF,TARGET,ICON,SP_VISIBLE,SP_TYPE,PERMISSION,VERSION,SYS_ID 
+		FROM SECURITY_PERMISSION WHERE SP_PARENT_ID=#{parentId} AND SYS_ID=#{sysId} AND SP_TYPE='button' AND SP_VISIBLE='Y'
+	</select>
+	
+	<!-- 获取账号用户对应的所有权限 -->
+	<select id="getAllPermissionByUserAccount" resultMap="permissionResultMap">
+		SELECT SP.SP_ID,SP.SP_NAME,SP.SP_PARENT_ID,SP.SP_DESC,SP.HREF,SP.TARGET,SP.ICON,SP.SP_VISIBLE,SP.SP_TYPE,SP.PERMISSION,SP.VERSION,SP.SYS_ID 
+	    FROM SECURITY_ROLE_PERMISSION RP ,SECURITY_PERMISSION SP 
+	    WHERE SP.SP_ID=RP.SP_ID AND RP.SR_ID IN(SELECT SR_ID FROM SECURITY_USER_ROLE  WHERE SU_ID = (SELECT SU_ID FROM SECURITY_USER WHERE SU_ACCOUNT=#{account})) AND SP.SYS_ID=#{sysId} AND SP.SP_VISIBLE='Y'
+	</select>
+	
+		<!-- 获取账号用户对应的所有权限 -->
+	<select id="getPermissionByRoleId"  resultMap="permissionResultMap">
+		SELECT SP.SP_ID,SP.SP_NAME,SP.SP_PARENT_ID,SP.SP_DESC,SP.HREF,SP.TARGET,SP.ICON,SP.SP_VISIBLE,SP.SP_TYPE,SP.PERMISSION,SP.VERSION,SP.SYS_ID 
+	    FROM SECURITY_ROLE_PERMISSION RP ,SECURITY_PERMISSION SP 
+	    WHERE SP.SP_ID=RP.SP_ID AND RP.SR_ID=#{srId} AND SP.SYS_ID=#{sysId} AND SP.SP_VISIBLE='Y'
+	</select>
+
+</mapper>

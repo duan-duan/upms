@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.upms.dao.system.LoginSuccessMapper">
+
+	<resultMap id="loginSuccessResultMap" type="securityLoginSuccessLog">
+		<id property="id" column="ID" />
+		<id property="username" column="USERNAME" />
+		<id property="ip" column="IP" />
+		<id property="insertDate" column="INSERT_DATE" />
+	</resultMap>
+
+		<!-- 创建实体 -->
+		
+	<insert id="createEntity" parameterType="securityLoginSuccessLog">
+		<include refid="insertEntityHeadSql" />
+		(#{username},#{ip},#{insertDate})
+	</insert>
+	
+		<!-- 创建实体头部 -->
+	<sql id="insertEntityHeadSql">
+	        INSERT INTO SECURITY_LOGIN_SUCCEED_LOG (USERNAME,IP,INSERT_DATE)VALUES
+	</sql>
+	
+		<!-- 根据实体查询列表 -->
+	<select id="queryListByEntity" parameterType="securityLoginSuccessLog" resultMap="loginSuccessResultMap">
+		<include refid="queryEntityHeadSql" />
+		<include refid="queryEntityCriteriaSql" />
+	</select>
+	
+		<!-- 分页查询 -->
+	<select id="pageQueryEntity" parameterType="securityLoginSuccessLog"
+		resultMap="loginSuccessResultMap">
+		<include refid="queryEntityHeadSql" />
+		<include refid="queryEntityCriteriaSql" />
+		<include refid="Common.mysqlPageineSql" />
+	</select>
+
+	<!-- 统计结果 -->
+	<select id="pageQueryEntityCount" parameterType="securityLoginSuccessLog"
+		resultType="long">
+		select count(1) as num
+		<include refid="queryEntityCriteriaSql" />
+	</select>
+
+	<!-- 查询实体头部 -->
+	<sql id="queryEntityHeadSql">
+		SELECT ID,USERNAME,IP,INSERT_DATE 
+	</sql>
+
+
+	<!-- 查询实体条件 -->
+	<sql id="queryEntityCriteriaSql">
+		FROM SECURITY_LOGIN_SUCCEED_LOG 
+		<where>
+			<if test="username!=null and username!=''">
+				and USERNAME= #{username}
+			</if>
+			<if test="null!=ip and ip!=''">
+			  	 and IP =#{ip} 
+			</if>
+			<if test="null!=insertUpDate">
+			  	 and INSERT_DATE &lt;= #{insertUpDate} 
+			</if>
+			<if test="null!=insertDownDate">
+			  	 and INSERT_DATE &gt;= #{insertDownDate} 
+			</if>
+		</where>
+	</sql>
+</mapper>

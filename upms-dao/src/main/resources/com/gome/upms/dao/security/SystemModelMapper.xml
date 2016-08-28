@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.upms.dao.security.SystemModelMapper">
+
+	<resultMap id="systemModelResultMap" type="securitySystemModel">
+		<id property="id" column="ID" />
+		<id property="name" column="NAME" />
+		<id property="description" column="DESCRIPTION" />
+	</resultMap>
+	
+	
+		<!-- 创建实体 -->
+	<insert id="createEntity" parameterType="securitySystemModel">
+		<include refid="insertEntityHeadSql" />
+		(#{name},#{description})
+	</insert>
+
+
+	<!-- 更新实体 -->
+	<update id="updateEntity" parameterType="securitySystemModel">
+		update SYSTEM_MODEL
+		<set>
+			<if test="name!=null">NAME=#{name},</if>
+			<if test="description!=null">DESCRIPTION=#{description}</if>
+		</set>
+		where ID=#{id}
+	</update>
+
+
+	<!-- 根据实体查询列表 -->
+	<select id="queryListByEntity" parameterType="securitySystemModel" resultMap="systemModelResultMap">
+		<include refid="queryEntityHeadSql" />
+		<include refid="queryEntityCriteriaSql" />
+	</select>
+
+
+	<!-- 根据map参数查询列表 -->
+	<select id="queryListByMap" resultMap="systemModelResultMap">
+		<include refid="queryEntityHeadSql" />
+		 FROM SYSTEM_MODEL SM
+		<where>
+		   <!-- 自定义查询条件 -->
+		</where>
+	</select>
+
+
+
+	<!-- 根据ID删除实体 -->
+	<delete id="deleteById" parameterType="long">
+		DELETE FROM SYSTEM_MODEL
+		where ID=#{id}
+	</delete>
+
+
+	<!-- 根据对象删除实体，此方法可以根据自己需求实现 -->
+	<delete id="deleteByObject" parameterType="securitySystemModel">
+	     <!-- 自定义删除条件 -->
+	</delete>
+
+	<!-- 根据ID查出实体 -->
+	<select id="queryById" parameterType="long" resultMap="systemModelResultMap">
+		SELECT SM.ID,SM.NAME,SM.DESCRIPTION FROM SYSTEM_MODEL SM where SM.ID=#{id}
+	</select>
+
+	<!-- 分页查询 -->
+	<select id="pageQueryEntity" parameterType="securitySystemModel"
+		resultMap="systemModelResultMap">
+		<include refid="queryEntityHeadSql" />
+		<include refid="queryEntityCriteriaSql" />
+		<include refid="Common.mysqlPageineSql" />
+	</select>
+
+	<!-- 统计结果 -->
+	<select id="pageQueryEntityCount" parameterType="securitySystemModel"
+		resultType="long">
+		select count(1) as num
+		<include refid="queryEntityCriteriaSql" />
+	</select>
+
+	<!-- 创建实体头部 -->
+	<sql id="insertEntityHeadSql">
+		 INSERT INTO SYSTEM_MODEL(NAME,DESCRIPTION)VALUES
+	</sql>
+
+
+	<!-- 查询实体头部 -->
+	<sql id="queryEntityHeadSql">
+		SELECT SM.ID,SM.NAME,SM.DESCRIPTION 
+	</sql>
+
+
+	<!-- 查询实体条件 -->
+	<sql id="queryEntityCriteriaSql">
+		FROM SYSTEM_MODEL SM
+		<where>
+		     1=1
+			<if test="null!=id">
+			  	 AND SM.ID LIKE CONCAT(#{id},'%')
+			</if>
+			<if test="null!=name and name!=''">
+			  	 AND SM.NAME LIKE CONCAT(#{name},'%') 
+			</if>
+		</where>
+	</sql>
+
+</mapper>

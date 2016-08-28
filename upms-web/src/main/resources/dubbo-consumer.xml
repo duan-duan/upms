@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+        ">
+ 
+    <!-- 提供方应用信息，用于计算依赖关系 -->
+    <dubbo:application name="upmsService"  />
+ 
+    <!-- 使用multicast广播注册中心暴露服务地址 -->
+	<dubbo:registry id="upmsServiceId" address="${registry.address}" />
+	
+ 	<!-- for security-->
+ 	<dubbo:reference timeout="${dubbo-timeout}" retries="${dubbo-retries}" id="userService" interface="com.upms.service.api.security.UserService" group="${service.group}" registry="upmsServiceId"  check="false"/>
+ 	<dubbo:reference timeout="${dubbo-timeout}" retries="${dubbo-retries}" id="roleService" interface="com.upms.service.api.security.RoleService"  group="${service.group}" registry="upmsServiceId"  check="false"/>
+ 	<dubbo:reference timeout="${dubbo-timeout}" retries="${dubbo-retries}" id="userRoleService" interface="com.upms.service.api.security.UserRoleService"  group="${service.group}" registry="upmsServiceId"  check="false"/>
+ 	<dubbo:reference timeout="${dubbo-timeout}" retries="${dubbo-retries}" id="rolePermissionService" interface="com.upms.service.api.security.RolePermissionService"  group="${service.group}" registry="upmsServiceId"  check="false"/>
+ 	<dubbo:reference timeout="${dubbo-timeout}" retries="${dubbo-retries}" id="permissionService" interface="com.upms.service.api.security.PermissionService"  group="${service.group}" registry="upmsServiceId"  check="false"/>
+ 	<dubbo:reference timeout="${dubbo-timeout}" retries="${dubbo-retries}" id="resourceService" interface="com.upms.service.api.security.ResourceService"  group="${service.group}" registry="upmsServiceId"  check="false"/>
+ 	<dubbo:reference timeout="${dubbo-timeout}" retries="${dubbo-retries}" id="systemModelService" interface="com.upms.service.api.security.SystemModelService"  group="${service.group}" registry="upmsServiceId"  check="false"/>
+ 	<dubbo:reference timeout="${dubbo-timeout}" retries="${dubbo-retries}" id="operationLogService" interface="com.upms.service.api.system.OperationLogService"  group="${service.group}"  registry="upmsServiceId"  check="false"/>
+    <dubbo:reference timeout="${dubbo-timeout}" retries="${dubbo-retries}" id="loginFailService" interface="com.upms.service.api.system.LoginFailService"  group="${service.group}"  registry="upmsServiceId"  check="false"/>
+    <dubbo:reference timeout="${dubbo-timeout}" retries="${dubbo-retries}" id="loginSuccessService" interface="com.upms.service.api.system.LoginSuccessService"  group="${service.group}"  registry="upmsServiceId"  check="false"/>
+    <dubbo:reference timeout="${dubbo-timeout}" retries="${dubbo-retries}" id="departmentService" interface="com.upms.service.api.security.DepartmentService"  group="${service.group}"  registry="upmsServiceId"  check="false"/>
+        
+</beans>

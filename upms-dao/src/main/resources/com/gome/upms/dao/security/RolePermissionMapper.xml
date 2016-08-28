@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.upms.dao.security.RolePermissionMapper">
+
+	<resultMap id="rolePermissionResultMap" type="securityRolePermission" >
+	    <id property="srId" column="SR_ID" />
+		<id property="spId" column="SP_ID" />
+		<id property="spName" column="SP_NAME" />
+		<id property="spParentId" column="SP_PARENT_ID"/>
+		<id property="spDesc" column="SP_DESC" />
+		<id property="href" column="HREF" />
+		<id property="target" column="TARGET" />
+		<id property="icon" column="ICON" />
+		<id property="spVisible" column="SP_VISIBLE" />
+		<id property="spType" column="SP_TYPE" />
+		<id property="permission" column="PERMISSION" />
+		<id property="version" column="VERSION" />
+	</resultMap>
+
+    <!-- 查询某个角色需要授权使用 -->
+	<select id="getListBySrId" resultMap="rolePermissionResultMap">
+		SELECT
+	    SRP.SR_ID,SP.SP_ID,SP.SP_NAME,SP.SP_PARENT_ID,SP.SP_DESC FROM SECURITY_ROLE_PERMISSION SRP,SECURITY_PERMISSION SP
+	    WHERE SP.SP_ID=SRP.SP_ID AND SRP.SR_ID= #{srId} AND SP.SYS_ID=#{sysId}  AND SP.SP_VISIBLE='Y'
+	</select>
+	
+	
+	<select id="queryListByEntity" parameterType="securityRolePermission" resultMap="rolePermissionResultMap">
+		<include refid="queryEntityHeadSql" />
+		<include refid="queryEntityCriteriaSql" />
+	</select>
+	
+			<!-- 创建实体 -->
+	<insert id="createEntity" parameterType="securityRolePermission">
+		<include refid="insertEntityHeadSql" />
+		(#{srId},#{spId})
+	</insert>
+	
+	
+	<!-- 根据ID删除实体 -->
+	<delete id="deleteById" parameterType="long">
+		DELETE FROM SECURITY_ROLE_PERMISSION
+		where SR_ID=#{srId}
+	</delete>
+	
+		<!-- 根据对象删除实体，此方法可以根据自己需求实现 -->
+	<delete id="deleteByObject" parameterType="securityRolePermission">
+	   		DELETE FROM SECURITY_ROLE_PERMISSION
+		    where SR_ID=#{srId} AND SP_ID=#{spId}
+	</delete>
+	
+	<!-- 创建实体头部 -->
+	<sql id="insertEntityHeadSql">
+		 INSERT INTO SECURITY_ROLE_PERMISSION(
+	      SR_ID,SP_ID
+	     )VALUES
+	</sql>
+	
+	<!-- 查询实体头部 -->
+	<sql id="queryEntityHeadSql">
+		SELECT SR_ID,SP_ID
+	</sql>
+
+
+	<!-- 查询实体条件 -->
+	<sql id="queryEntityCriteriaSql">
+		FROM SECURITY_ROLE_PERMISSION
+		<where>
+			<if test="srId!=null and srId!=''">
+				and SR_ID= #{srId}
+			</if>
+			<if test="spId!=null and spId!=''">
+				and SP_ID= #{spId}
+			</if>
+		</where>
+	</sql>
+	
+	
+	<select id="getListByEntityAndSysId" resultMap="rolePermissionResultMap">
+		SELECT RP.* FROM SECURITY_ROLE_PERMISSION RP , SECURITY_PERMISSION SP,SECURITY_ROLE SR
+	    WHERE SP.SP_ID=RP.SP_ID AND SR.SR_ID=RP.SR_ID AND SR.SR_ID=#{srId} AND SR.SYS_ID=#{sysId} AND RP.SP_ID=#{spId} AND SP.SP_VISIBLE='Y'
+	</select>
+	
+	<!-- 获取某个界面，某个角色授权功能按钮列表 -->
+	<select id="getPermissionButtonListForPage" parameterType="map" resultMap="rolePermissionResultMap">
+		SELECT SRP.SR_ID,SRP.SP_ID FROM SECURITY_ROLE_PERMISSION SRP
+		LEFT JOIN SECURITY_ROLE SR ON SR.SR_ID = SRP.SR_ID
+		LEFT JOIN SECURITY_PERMISSION SP ON SP.SP_ID = SRP.SP_ID
+		WHERE SRP.SR_ID     =   #{srId}
+		AND SP.SP_PARENT_ID =   #{spId}
+		AND SP.SP_TYPE      =  'button'
+		AND SP.SP_VISIBLE='Y'
+	</select>
+	
+	
+	<!-- 获取某个角色授权菜单列表 -->
+	<select id="getPermissionMenuListForRole" resultMap="rolePermissionResultMap">
+		SELECT SRP.SR_ID,SRP.SP_ID,SP.SP_TYPE FROM SECURITY_ROLE_PERMISSION SRP
+		LEFT JOIN SECURITY_ROLE SR ON SR.SR_ID = SRP.SR_ID
+		LEFT JOIN SECURITY_PERMISSION SP ON SP.SP_ID = SRP.SP_ID
+		WHERE SRP.SR_ID     =   #{srId}
+		AND SP.SP_TYPE      !=  'button'
+		AND SP.SP_VISIBLE='Y'
+	</select>
+	
+</mapper>

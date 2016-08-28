@@ -1,0 +1,232 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+[#include "../include/taglibs.html"/]
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>资源列表</title> [#include "../include/base_js_css.html"/]
+<script type="text/javascript" src="${resource!}/js/resource/tree.js"></script>
+
+<style type="text/css">
+#fm {
+	margin: 0;
+	padding: 10px 30px;
+}
+
+.ftitle {
+	font-size: 14px;
+	font-weight: bold;
+	padding: 5px 0;
+	margin-bottom: 10px;
+	border-bottom: 1px solid #ccc;
+}
+
+.fitem {
+	margin-bottom: 5px;
+}
+
+.fitem label {
+	display: inline-block;
+	width: 80px;
+}
+
+</style>
+</head>
+<body style="visibility: visible;">
+     <div id="eastContent" class="easyui-layout" style="width:100%;height:100%;" fit="true">
+        <div data-options="region:'east',split:true,collapsed:true" title='操作按钮' style="width:300px;">
+             <table id="resourceDataGrid" class="easyui-datagrid" fit="true">
+				<thead>
+					<tr>
+					    <th data-options="field:'sp_name'">操作名称</th>
+                        <th data-options="field:'href'">操作地址</th>
+                        <th data-options="field:'permission'">操作权限</th>
+					</tr>
+				</thead>
+			</table>
+        </div><!-- east area -->
+        <div data-options="region:'center',title:'菜单管理'" style="border:none;">
+            <table id="treeGrid" class="easyui-treegrid">
+                <thead>
+                    <tr>
+                    </tr>
+                </thead>
+            </table>
+        </div> <!-- center area -->
+    </div><!-- end layout -->
+    
+    <div id="add" class="easyui-dialog" title="菜单录入" style="height:550px;width:400px;padding:10px 20px" closed="true" buttons="#add-dlg-buttons">
+           <!-- 添加区域 -->
+      <div class="easyui-layout" style="border:none; height:550px;" fit="true">
+	     <!-- 节点内容 -->
+	     <form id="add_form" method="post" novalidate>
+	         <table cellpadding="5">
+                <tr>
+                    <td><input name="sp_parent_id" required="true" id="sp_parent_id" class="easyui-numberbox" style="display:none;"></input>
+                    <input name="sp_visible"  id="visible"  type="hidden" value="Y"></td>
+                </tr>
+                <tr>
+                    <td align="right">菜单名称:</td>
+                    <td><input name="sp_name" required="true" id="name" type="text" class="easyui-validatebox" required="true"></input></td>
+                </tr>
+                <tr>
+	                <td align="right">系统名称:</td>
+	                <td><input class="easyui-combobox" id="sys2" name="sys_id" data-options="valueField:'id',textField:'name'" editable="false" required="true"> </input></td>
+	            </tr>
+	            <tr>
+	                <td align="right">菜单级别:</td>
+                    <td><select id="nodeLevel" name="nodeLevel" class="easyui-combobox" style="width:132px" editable="false" required="true"><option value="0">一级菜单</option><option value="-1">下级菜单</option></select></td>
+                </tr>
+                <tr id="father" style="display:none">
+	                <td align="right">上级菜单:</td>
+                    <td><input id="comboTree" class="easyui-combotree" value=" " required="true"></td>
+                </tr>
+                <tr>
+                    <td align="right">菜单链接:</td>
+                    <td>
+                    <input name="href" id="href"  class="easyui-validatebox" required="true"></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">菜单类型:</td>
+                    <td>
+                    <select name="sp_type" id="type" class="easyui-combobox" style="width:132px" editable="false" required="true">
+                         <option value="page">page</option>
+                         <option value="menu">menu</option>
+                    </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">菜单排序:</td>
+                    <td>
+                    <input name="rank" required="true" id="rank" class="easyui-numberbox" validType="length[1,10]" missingMessage="例如1、2、3...">
+                    </td>
+	            </tr>
+	             <tr>
+                    <td align="right">菜单描述:</td>
+                    <td>
+                    <textarea rows="5" cols="16" name="sp_desc" id="desc" required="true" class="easyui-validatebox" ></textarea>
+                    </td>
+                </tr>
+            </table>
+		</form>
+      </div>
+    </div><!-- end add -->
+    <div id="add-dlg-buttons">
+      <a class="easyui-linkbutton" iconCls="icon-ok" onclick="submitAddForm()">保存</a> 
+      <a class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#add').dialog('close')">取消</a>
+    </div>
+    <div id="edit" class="easyui-dialog" title="菜单编辑" style="height:500px;width:400px;padding:10px 20px" closed="true" buttons="#edit-dlg-buttons">
+         <!-- 编辑区域 -->
+	     <div  class="easyui-layout" style=" border:none; height:500px" fit="true">
+		     <!-- form -->
+	        <form id="edit_form" method="post" novalidate>
+	            <table cellpadding="5">
+	                <tr>
+	                    <td><input name="sp_id" required="true" id="edit_sp_id"  class="easyui-numberbox" style="display:none;"></input>
+	                     <input name="sp_parent_id" required="true" id="edit_sp_parent_id" class="easyui-numberbox" style="display:none;"></input>
+	                       <input name="sp_visible" id="edit_visible" type="hidden" value="Y">
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td align="right">菜单名称:</td>
+	                    <td><input name="sp_name" required="true" id="edit_name" type="text" class="easyui-validatebox" ></input></td>
+	                </tr>
+	                <tr>
+	                    <td align="right">系统名称:</td>
+	                    <td><input name="sys_id" id="sys1" class="easyui-combobox" data-options="valueField:'id',textField:'name'"></input></td>
+	                </tr>
+	
+	                <tr>
+	                    <td align="right">菜单链接:</td>
+	                    <td>
+	                    <input name="href" id="edit_href"  class="easyui-validatebox" required="true"></input>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td align="right">菜单类型:</td>
+	                    <td>
+	                      <select name="sp_type" id="edit_type" class="easyui-combobox" style="width:132px" editable="false" >
+                            <option value="page">page</option>
+                            <option value="menu">menu</option>
+                          </select>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td align="right">菜单排序:</td>
+	                    <td>
+	                    <input name="rank" required="true" id="edit_rank" class="easyui-numberbox" validType="length[1,10]" missingMessage="例如1、2、3...">
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td align="right">菜单描述:</td>
+	                    <td>
+	                    <textarea rows="5" cols="16" name="sp_desc" id="edit_desc" required="true" class="easyui-validatebox" validType="length[1,100]"></textarea>
+	                    </td>
+	                </tr>
+               </table>
+	       </form>
+	  </div>
+</div><!-- end edit -->
+
+<div id="edit-dlg-buttons">
+      <a class="easyui-linkbutton" iconCls="icon-ok" onclick="submitEditForm()">保存</a> 
+      <a class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#edit').dialog('close')">取消</a>
+</div>
+    
+<div id="od" class="easyui-dialog" title="操作录入" style="height:400px;width:400px;padding:10px 20px" closed="true" buttons="#od-dlg-buttons">
+         <!-- 操作区域 -->
+	     <div  class="easyui-layout" style=" border:none; height:500px" fit="true">
+		     <!-- form -->
+	        <form id="add_button_form" method="post" novalidate>
+	            <table cellpadding="5">
+	                <tr>
+	                    <td>
+	                      <input type="hidden" id="pId" name="pId" />   <input name="sp_type" id="sp_type"  type="hidden"></input>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td><input name="sp_parent_id" required="true" id="operation_sp_parent_id" class="easyui-numberbox" style="display:none;"></input></td>
+	                </tr>
+	                 <tr>
+	                    <td><input name="sys_id" required="true" id="operation_sys_id" class="easyui-numberbox" style="display:none;"></input></td>
+	                </tr>
+	                <tr>
+	                    <td align="right">操作名称:</td>
+	                    <td><input name="sp_name" required="true" id="operation_name" type="text" class="easyui-validatebox" ></input></td>
+	                </tr>
+	                <tr>
+	                    <td align="right">操作描述:</td>
+	                    <td><input name="sp_desc" required="true" id="operation_desc" type="text" class="easyui-validatebox" ></input></td>
+	                </tr>
+	                <tr>
+	                    <td align="right">操作地址:</td>
+	                    <td><input name="href" id="operation_href" class="easyui-validatebox" required="true"></input></td>
+	                </tr>
+	                <tr>
+	                    <td align="right">排序:</td>
+	                    <td><input name="rank" id="operation_rank" class="easyui-numberbox" required="true"></input></td>
+	                </tr>
+	                <tr>
+	                    <td align="right">操作权限:</td>
+	                    <td>
+	                    <input name="permission" id="operation_permission" required="true" class="easyui-validatebox" missingMessage='(按照"系统名:模块名:权限"格式，例如：upms:user:add)'></input>
+	                    </td>
+	                </tr>
+	                <tr style="display:none">
+	                    <td align="right"></td>
+	                    <td>
+	                 
+	                    </td>
+	                </tr>
+                </table>
+	       </form>
+	    </div>
+</div><!-- end operation -->
+    
+<div id="od-dlg-buttons">
+      <a class="easyui-linkbutton" iconCls="icon-ok" onclick="javascript:submitAddButtonForm();">保存</a> 
+      <a class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#od').dialog('close')">取消</a>
+</div>
+
+</body>
+</html>

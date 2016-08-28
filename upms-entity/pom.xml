@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.upms</groupId>
+		<artifactId>upms</artifactId>
+		<version>1.0.0.tag</version>
+	</parent>
+	<groupId>com.upms</groupId>
+	<artifactId>upms-entity</artifactId>
+	<version>1.0.0.tag</version>
+	<name>UPMS Entity</name>
+	<url>http://www.gome.com.cn</url>
+	<inceptionYear>2014</inceptionYear>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.core</groupId>
+			<artifactId>core-common</artifactId>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.upms</groupId>
+			<artifactId>upms-dto</artifactId>
+		</dependency>
+	</dependencies>
+</project>

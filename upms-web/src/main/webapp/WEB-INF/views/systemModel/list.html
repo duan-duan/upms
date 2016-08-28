@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+[#include "../include/taglibs.html"/]
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>系统模型列表</title> 
+    [#include "../include/base_js_css.html"/]
+    <script type="text/javascript" src="${resource!}/js/systemModel/systemModel.js"></script>
+  </head>
+  <body style="visibility: visible;">
+    <div class="top_content">
+      <!-- 查询用户表单 -->
+      <div class="easyui-panel" style="border-bottom: 0; height: 80px;" data-options="iconCls:'icon-search',collapsible:true,border: false" fit="true">
+        <form id="fm_search" method="post" novalidate>
+          <div class="fitem">
+            <table>
+              <tr>
+                <td class="search_form_tdlf"><label for="id">系统编号</label></td>
+                <td class="search_form_tdr"><input name="id" id="id" type="text"/></td>
+                <td class="search_form_tdl"><label for="name">系统名称</label></td>
+                <td class="search_form_tdr"><input name="name" id="name" type="text"/></td>
+              </tr>
+              <tr>
+                <td class="search_form_tdlf">&nbsp;</td>
+                <td colspan="3"  class="search_form_tdr">
+                  <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="javascript:submitQuerySystemModel();">查询</a>
+                  <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reset" onclick="javascript:$('#fm_search').form('reset');">重置</a>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </form>
+      </div> 
+    </div>
+    <div id="system_grid" class="grid_content">
+      <table id="systemModelview" fit="true">
+      </table>
+    </div>
+    <!-- 添加模块 -->
+    <div id="systemModel_add_dialog" class="easyui-dialog" style="width: 450px; height: 285px; padding: 10px 20px" closed="true" buttons="#dlg-buttons">
+      <div class="ftitle">系统信息</div>
+      <form id="systemModel_add_form" class="ftitle_form" method="post" novalidate>
+        <div class="fitem fitem_odd">
+          <label>系统名称:</label> <input name="name" id="name"
+            class="easyui-validatebox" required="true" type="text" validType="length[1,50]">
+        </div>
+        <div class="fitem fitem_even">
+          <label style="vertical-align: top;"> 系统描述:</label>
+          <textarea style="height: 100px; width: 220px;" name="description" id="description"  required="true" class="easyui-validatebox" validType="length[1,100]"></textarea>
+        </div>
+      </form>
+    </div>
+    
+    <!-- 修改模块 -->
+    <div id="systemModel_edit_dialog" class="easyui-dialog" style="width: 450px; height: 285px; padding: 10px 20px" closed="true" buttons="#dlg-buttons">
+      <div class="ftitle">系统信息</div>
+      <form id="systemModel_edit_form" class="ftitle_form" method="post" novalidate>
+        <div class="fitem fitem_odd">
+          <label>系统名称:</label> <input name="name" id="name"
+            class="easyui-validatebox" required="true" type="text" validType="length[1,50]"> <input name="id" type="hidden" />
+        </div>
+        <div class="fitem fitem_even">
+          <label style="vertical-align: top;"> 系统描述:</label>
+          <textarea style="height: 100px; width: 220px;" name="description" id="description"  required="true" class="easyui-validatebox" validType="length[1,100]"></textarea>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

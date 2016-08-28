@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<dubbo:service timeout="${dubbo-timeout}" retries="${dubbo-retries}"
+		interface="com.upms.service.api.security.UserService" ref="userServiceImpl" group="${service.group}"/>
+	<dubbo:service timeout="${dubbo-timeout}" retries="${dubbo-retries}"
+		interface="com.upms.service.api.security.RoleService" ref="roleServiceImpl" group="${service.group}"/>
+	<dubbo:service timeout="${dubbo-timeout}" retries="${dubbo-retries}"
+    interface="com.upms.service.api.security.UserRoleService" ref="userRoleServiceImpl" group="${service.group}"/>
+	<dubbo:service timeout="${dubbo-timeout}" retries="${dubbo-retries}"
+		interface="com.upms.service.api.security.RolePermissionService" ref="rolePermissionServcieImpl" group="${service.group}"/>
+	<dubbo:service timeout="${dubbo-timeout}" retries="${dubbo-retries}"
+		interface="com.upms.service.api.security.PermissionService" ref="permissionServiceImpl" group="${service.group}"/>
+    <dubbo:service timeout="${dubbo-timeout}" retries="${dubbo-retries}"
+		interface="com.upms.service.api.security.ResourceService" ref="resourceServiceImpl" group="${service.group}"/>
+	<dubbo:service timeout="${dubbo-timeout}" retries="${dubbo-retries}"
+		interface="com.upms.service.api.security.SystemModelService" ref="systemModelServiceImpl" group="${service.group}"/>
+			<dubbo:service timeout="${dubbo-timeout}" retries="${dubbo-retries}"
+		interface="com.upms.service.api.security.DepartmentService" ref="departmentServiceImpl" group="${service.group}"/>
+</beans>

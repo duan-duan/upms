@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.upms.dao.security.DepartmentMapper">
+    
+     <resultMap id="departmentResultMap" type="securityDepartment">
+		<id property="departmentId" column="DEPARTMENT_ID" />
+		<id property="departmentName" column="DEPARTMENT_NAME" />
+		<id property="departmentCode" column="DEPARTMENT_CODE" />
+		<id property="departmentParentId" column="DEPARTMENT_PARENT_ID" />
+		<id property="departmentDescribe" column="DEPARTMENT_DESCRIBE" />
+		<id property="departmentRank" column="DEPARTMENT_RANK" />
+	</resultMap>
+	
+	<!-- 创建实体 -->
+	<insert id="createEntity" parameterType="securityDepartment">
+		<include refid="insertEntityHeadSql" />
+		(#{departmentId},#{departmentName},#{departmentCode},#{departmentParentId},#{departmentDescribe},#{departmentRank})
+	</insert>
+	
+		<!-- 创建实体头部 -->
+	<sql id="insertEntityHeadSql">
+	     INSERT INTO SECURITY_DEPARTMENT (DEPARTMENT_ID,DEPARTMENT_NAME,DEPARTMENT_CODE,DEPARTMENT_PARENT_ID,DEPARTMENT_DESCRIBE,DEPARTMENT_RANK)VALUES
+	</sql>
+	
+	
+		<!-- 更新实体 -->
+	<update id="updateEntity" parameterType="securityDepartment">
+		update SECURITY_DEPARTMENT
+		<set>
+			<if test="departmentName!=null">DEPARTMENT_NAME=#{departmentName},</if>
+			<if test="departmentCode!=null">DEPARTMENT_CODE=#{departmentCode},</if>
+			<if test="departmentParentId!=null">DEPARTMENT_PARENT_ID=#{departmentParentId},</if>
+			<if test="departmentDescribe!=null">DEPARTMENT_DESCRIBE=#{departmentDescribe},</if>
+			<if test="departmentRank!=null">DEPARTMENT_RANK=#{departmentRank}</if>
+		</set>
+		where DEPARTMENT_ID=#{departmentId}
+	</update>
+	
+		<!-- 根据ID删除实体 -->
+	<delete id="deleteById" parameterType="long">
+		DELETE FROM SECURITY_DEPARTMENT
+		where DEPARTMENT_ID=#{departmentId}
+	</delete>
+	
+	
+	<!-- 根据实体查询列表 -->
+	<select id="queryListByEntity" parameterType="securityDepartment" resultMap="departmentResultMap">
+		<include refid="queryEntityHeadSql" />
+		<include refid="queryEntityCriteriaSql" />
+	</select>
+	
+	<!-- 根据ID查出实体 -->
+	<select id="queryById" parameterType="long" resultMap="departmentResultMap">
+		SELECT *
+		FROM SECURITY_DEPARTMENT SD where SD.DEPARTMENT_ID=#{departmentId}
+	</select>
+
+	<!-- 分页查询 -->
+	<select id="pageQueryEntity" parameterType="securityDepartment"
+		resultMap="departmentResultMap">
+		<include refid="queryEntityHeadSql" />
+		<include refid="queryEntityCriteriaSql" />
+		<include refid="Common.mysqlPageineSql" />
+	</select>
+
+	<!-- 统计结果 -->
+	<select id="pageQueryEntityCount" parameterType="securityDepartment"
+		resultType="long">
+		select count(1) as num
+		<include refid="queryEntityCriteriaSql" />
+	</select>
+	
+	<!-- 查询实体头部 -->
+	<sql id="queryEntityHeadSql">
+		SELECT SD.DEPARTMENT_ID,SD.DEPARTMENT_NAME,SD.DEPARTMENT_CODE,SD.DEPARTMENT_PARENT_ID,SD.DEPARTMENT_DESCRIBE,SD.DEPARTMENT_RANK
+	</sql>
+
+
+	<!-- 查询实体条件 -->
+	<sql id="queryEntityCriteriaSql">
+		FROM SECURITY_DEPARTMENT SD
+		<where>
+			<if test="departmentName!=null and departmentName!=''">
+				and SD.DEPARTMENT_NAME= #{departmentName}
+			</if>
+			<if test="departmentCode!=null and departmentCode!=''">
+				and SD.DEPARTMENT_CODE= #{departmentCode}
+			</if>
+
+			<if test="departmentParentId!=null and departmentParentId!=''">
+				and SD.DEPARTMENT_PARENT_ID= #{departmentParentId}
+			</if>
+		</where>
+	</sql>
+	
+	
+	<select id="getRootList" resultMap="departmentResultMap">
+       <include refid="queryEntityHeadSql" />
+        FROM SECURITY_DEPARTMENT SD
+        WHERE SD.DEPARTMENT_PARENT_ID NOT IN (SELECT DEPARTMENT_ID FROM SECURITY_DEPARTMENT) 
+        ORDER BY SD.DEPARTMENT_RANK
+	</select>
+	
+	<select id="getChildNodeList" resultMap="departmentResultMap">
+		<include refid="queryEntityHeadSql" />
+        FROM SECURITY_DEPARTMENT SD
+        WHERE SD.DEPARTMENT_PARENT_ID = #{pid} 
+	</select>
+	
+	<select id="getNodeListByCondition" resultMap="departmentResultMap">
+		<include refid="queryEntityHeadSql" />
+        FROM SECURITY_DEPARTMENT SD
+        WHERE SD.DEPARTMENT_ID like CONCAT(#{id},'%') AND length(SD.DEPARTMENT_ID)=#{lengthValue}
+        ORDER BY SD.DEPARTMENT_ID
+	</select>
+	
+	<select id="getNode" resultMap="departmentResultMap">
+		<include refid="queryEntityHeadSql" />
+         FROM SECURITY_DEPARTMENT SD
+         WHERE SD.DEPARTMENT_ID = #{ID} 
+	</select>
+
+</mapper>

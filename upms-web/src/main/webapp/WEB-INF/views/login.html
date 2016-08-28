@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+[#include "include/taglibs.html"/]
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>欢迎登陆${sysname}</title>
+    [#include "include/base_js_css.html"/]
+    <script type="text/javascript" src="${resource!}/js/login.js"></script>
+    <script type="text/javascript">
+       if(window!=top)
+    	   top.location.href=location.href;
+    </script>
+  </head>
+  <body class="login_body">
+    <div class="login_main">
+      <div class="login_logo">&nbsp;
+        <input type="hidden" id="sysId"  name="sysId" value="3">
+      </div>
+      <div class="login_name">
+        <input class="login_name_i easyui-validatebox" type="text" id="account" name="account" value="用户名" tabindex="1"/>
+      </div>
+      <div class="login_pwd">
+        <input class="login_pwd_r login_pwd_io" type="password" id="password" name="password"  tabindex="2"/>
+        <input class="login_pwd_i" type="text" id="passwordtext" name="passwordtext" value="密码"/>
+      </div>
+      <div class="login_btn" id="login_submit"  tabindex="3">&nbsp;</div>
+      <div class="login_more">
+        <table>
+          <tr>
+            <td valign="middle"><input type="checkbox"/></td>
+            <td valign="middle">下次自动登录</td>
+          </tr>
+          <tr>
+            <td>&nbsp;</td>
+            <td align="right"><a href="#" style="text-decoration: underline;">忘记密码？</a></td>
+          </tr>
+        </table>
+      </div>
+      <div class="login_msg" id="login_msg"  style="color: #d10311;">
+      </div>
+    </div>
+  </body>
+</html>
