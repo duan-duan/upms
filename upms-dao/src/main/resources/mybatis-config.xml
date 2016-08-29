@@ -28,7 +28,7 @@
 
 
 	<mappers>
-		<mapper resource="com/gome/upms/dao/common/common.xml"/>
+		<mapper resource="com/upms/dao/common/common.xml"/>
 	</mappers>
 	
 </configuration>

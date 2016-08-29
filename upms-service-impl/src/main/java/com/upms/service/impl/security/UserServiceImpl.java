@@ -25,7 +25,7 @@ import com.upms.vo.user.PermissionVo;
 
 import org.springframework.util.CollectionUtils;
 
-@Service
+@Service("userServiceImpl")
 public class UserServiceImpl<T extends BaseEntity, ID extends Serializable>
 		extends BaseServiceImpl<T, ID> implements UserService<T, ID> {
 
