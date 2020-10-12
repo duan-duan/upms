@@ -40,7 +40,7 @@
 		<xstream.version>1.4.6</xstream.version>
 		<quartz.version>2.2.1</quartz.version>
 		<fastjson.version>1.2.31</fastjson.version>
-		<junit.version>4.8.2</junit.version>
+		<junit.version>4.13.1</junit.version>
 		<commons-httpclient.version>3.1</commons-httpclient.version>
 		<taglibs.version>1.1.2</taglibs.version>
 		<jstl.version>1.2</jstl.version>
