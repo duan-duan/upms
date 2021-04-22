@@ -31,7 +31,7 @@
 		<jdbc.driver.artifactId>mysql-connector-java</jdbc.driver.artifactId>
 		<jdbc.driver.version>5.1.22</jdbc.driver.version>
 		<!-- mybatis -->
-		<org.mybatis.version>3.2.2</org.mybatis.version>
+		<org.mybatis.version>3.5.6</org.mybatis.version>
 		<mybatis-spring.version>1.1.1</mybatis-spring.version>
 		<!-- zookeeper dubbo -->
 		<dubbo.version>2.5.3</dubbo.version>
