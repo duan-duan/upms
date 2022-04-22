@@ -16,7 +16,7 @@
 		<core-common.version>1.0.0.tag</core-common.version>
 		<upms.entity.version>1.0.0.tag</upms.entity.version>
 		<upms.service-api.version>1.0.0.tag</upms.service-api.version>
-		<org.springframework.version>4.3.18.RELEASE</org.springframework.version>
+		<org.springframework.version>5.3.19</org.springframework.version>
 		<org.springframework.asm.version>3.1.2.RELEASE</org.springframework.asm.version>
 		<slf4j.version>1.7.5</slf4j.version>
 		<log4j.version>1.2.17</log4j.version>
