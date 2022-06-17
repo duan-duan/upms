@@ -39,7 +39,7 @@
 		<curator.version>1.1.16</curator.version>
 		<xstream.version>1.4.6</xstream.version>
 		<quartz.version>2.2.1</quartz.version>
-		<fastjson.version>1.2.31</fastjson.version>
+		<fastjson.version>1.2.83</fastjson.version>
 		<junit.version>4.8.2</junit.version>
 		<commons-httpclient.version>3.1</commons-httpclient.version>
 		<taglibs.version>1.1.2</taglibs.version>
