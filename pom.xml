@@ -65,7 +65,7 @@
 		<rxjava-core.version>0.16.1</rxjava-core.version>
 		<javax.mail.version>1.4.1</javax.mail.version>
 		<netty.version>3.2.5.Final</netty.version>
-		<jboss.resteasy.version>3.0.7.Final</jboss.resteasy.version>
+		<jboss.resteasy.version>3.14.0.Final</jboss.resteasy.version>
 		<jackson.version>2.9.10.1</jackson.version>
 		<org.codehaus.jackson.version>1.9.13</org.codehaus.jackson.version>
 		<hibernate-validator.version>5.0.1.Final</hibernate-validator.version>
