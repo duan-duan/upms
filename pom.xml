@@ -61,7 +61,7 @@
 		<org.easymock.version>2.5</org.easymock.version>
 		<jaxb-api.version>2.2</jaxb-api.version>
 		<aopalliance.version>1.0</aopalliance.version>
-		<org.apache.poi.version>3.8-beta4</org.apache.poi.version>
+		<org.apache.poi.version>4.1.1</org.apache.poi.version>
 		<rxjava-core.version>0.16.1</rxjava-core.version>
 		<javax.mail.version>1.4.1</javax.mail.version>
 		<netty.version>3.2.5.Final</netty.version>
